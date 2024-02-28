@@ -63,6 +63,8 @@
 const express = require('express')
 const app = express();
 const db=require('./db');
+require('dotenv').config();
+const PORT=process.env.PORT||3000; 
 //body parser is a middleware library of express js
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); //req.body  
@@ -80,9 +82,9 @@ res.send('Welcome to our hotel')
 app.use('/Person',personRoutes);
 app.use('/menu',menuItemRoutes);
         
-    
+   
 
 
-app.listen(3000, ()=>{
+app.listen(PORT, ()=>{
 console.log('listening on port 3000');
 });
