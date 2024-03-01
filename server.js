@@ -65,21 +65,36 @@ const app = express();
 const db=require('./db');
 require('dotenv').config();
 const PORT=process.env.PORT||3000; 
+const passport=require('./auth');
+
+//middleware function
+const logReq=(req,res,next)=>{
+    console.log(`[${new Date().toLocaleString()}] Request made to: ${req.originalUrl}`);
+
+    next();  //move to the new phase
+}
+
+//use middleware to all routes
+app.use(logReq);
+
+
+app.use(passport.initialize());
 //body parser is a middleware library of express js
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); //req.body  
 
-//const Person = require('./models/Person');
+
 
 const personRoutes = require('./routes/personRoutes');
 const menuItemRoutes=require('./routes/menuItemRoutes');
 
+const localAuthMiddleware=passport.authenticate('local',{session:false})
 app.get('/', function (req, res) {
 res.send('Welcome to our hotel')
 })
 
 //use the router
-app.use('/Person',personRoutes);
+app.use('/Person',localAuthMiddleware,personRoutes);
 app.use('/menu',menuItemRoutes);
         
    
